@@ -11,7 +11,6 @@ def product():
 def category(product):
     return Category("Смартфоны", "Смартфоны, как средство не только коммуникации", [product])
 
-
 def test_product_initialization(product):
     assert product.name == "Samsung Galaxy S23 Ultra"
     assert product.description == "256GB, Серый цвет, 200MP камера"
