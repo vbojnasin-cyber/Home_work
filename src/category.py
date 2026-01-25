@@ -1,3 +1,6 @@
+from src.product import Product
+
+
 class Category:
     name: str
     description: str
@@ -14,9 +17,12 @@ class Category:
 
     def __str__(self):
         total_quantity = sum(product.quantity for product in self.__products)
-        return f"{self.name}, количество продуктов {total_quantity} штук"
+        return f"{self.name}, количество продуктов: {total_quantity} шт."
 
     def add_product(self, product):
+        """Добавляет продукт в категорию с проверкой типа"""
+        if not isinstance(product, Product):
+            raise TypeError("Можно добавлять только объекты класса Product или его наследников")
         self.__products.append(product)
         Category.product_count += 1
 
