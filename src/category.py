@@ -20,9 +20,10 @@ class Category:
         return f"{self.name}, количество продуктов: {total_quantity} шт."
 
     def add_product(self, product):
-        """Добавляет продукт в категорию с проверкой типа"""
         if not isinstance(product, Product):
-            raise TypeError("Можно добавлять только объекты класса Product или его наследников")
+            raise TypeError(
+                "Можно добавлять только объекты класса Product или его наследников"
+            )
         self.__products.append(product)
         Category.product_count += 1
 

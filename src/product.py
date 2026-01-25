@@ -10,7 +10,6 @@ class Product:
         self.__price = price
         self.quantity = quantity
 
-
     @classmethod
     def new_product(cls, product_data: dict):
         name = product_data.get("name")
@@ -39,8 +38,7 @@ class Product:
             raise TypeError("Можно складывать только объекты класса Product")
 
         # Проверяем, что объекты одного конкретного класса
-        if type(self) != type(other):
+        if type(self) is not type(other):
             raise TypeError("Нельзя складывать товары разных категорий")
 
         return self.price * self.quantity + other.price * other.quantity
-

@@ -1,7 +1,8 @@
 import pytest
-from src.smartphone import Smartphone
-from src.lawngrass import LawnGrass
+
 from src.category import Category
+from src.lawngrass import LawnGrass
+from src.smartphone import Smartphone
 
 
 class TestIntegration:
