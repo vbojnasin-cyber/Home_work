@@ -20,10 +20,27 @@ class Category:
         return f"{self.name}, количество продуктов: {total_quantity} шт."
 
     def add_product(self, product):
+        """
+        Добавляет продукт в категорию
+
+        Args:
+            product: Объект для добавления
+
+        Raises:
+            TypeError: Если передан не объект класса Product или его наследников
+        """
+        # Используем isinstance() для проверки
         if not isinstance(product, Product):
             raise TypeError(
                 "Можно добавлять только объекты класса Product или его наследников"
             )
+
+        # Дополнительная проверка с помощью issubclass()
+        if not issubclass(type(product), Product):
+            raise TypeError(
+                "Объект должен быть наследником класса Product"
+            )
+
         self.__products.append(product)
         Category.product_count += 1
 

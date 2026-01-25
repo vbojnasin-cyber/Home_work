@@ -4,32 +4,6 @@ from src.product import Product
 from src.smartphone import Smartphone
 
 
-@pytest.fixture
-def smartphone():
-    return Smartphone(
-        name="iPhone 15",
-        description="Смартфон Apple",
-        price=89990,
-        quantity=50,
-        efficiency="A16 Bionic",
-        model="15 Pro",
-        memory=256,
-        color="Титановый"
-    )
-
-
-@pytest.fixture
-def smartphone2():
-    return Smartphone(
-        name="Samsung Galaxy",
-        description="Смартфон Samsung",
-        price=69990,
-        quantity=30,
-        efficiency="Snapdragon 8 Gen 2",
-        model="S23 Ultra",
-        memory=512,
-        color="Черный"
-    )
 
 
 class TestSmartphone:
@@ -109,9 +83,6 @@ def test_smartphone_new_product_method():
         "color": "Синий"
     }
 
-    # Smartphone.new_product не переопределен, используем родительский
-    # Но он создаст Product, а не Smartphone
-    # Для Smartphone нужно либо переопределить метод, либо создавать через конструктор
     smartphone = Smartphone(**product_data)
 
     assert smartphone.name == "Xiaomi Phone"
