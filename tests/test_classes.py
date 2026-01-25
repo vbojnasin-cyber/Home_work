@@ -1,94 +1,107 @@
 import pytest
+
 from src.classes import Product, Category
 
 
 class TestProduct:
-    def test_product_initialization(self):
-        """Проверка корректности инициализации объектов класса Product"""
-        product = Product("Телефон", "Смартфон", 10000.0, 5)
+    def test_product_str(self):
+        """Тест строкового представления продукта"""
+        product = Product("Телефон", "Смартфон", 50000.0, 10)
+        expected = "Телефон, 50000.0 руб. Остаток: 10 шт."
+        assert str(product) == expected
 
-        assert product.name == "Телефон"
-        assert product.description == "Смартфон"
-        assert product.price == 10000.0
-        assert product.quantity == 5
+    def test_product_addition(self):
+        """Тест сложения двух продуктов"""
+        product1 = Product("Телефон", "Смартфон", 50000.0, 10)
+        product2 = Product("Ноутбук", "Игровой", 100000.0, 2)
+
+        # 50000 * 10 + 100000 * 2 = 500000 + 200000 = 700000
+        result = product1 + product2
+        assert result == 700000.0
+
+    def test_product_addition_wrong_type(self):
+        """Тест сложения с неправильным типом"""
+        product = Product("Телефон", "Смартфон", 50000.0, 10)
+
+        with pytest.raises(TypeError, match="Можно складывать только объекты класса Product"):
+            product + 100
+
+    def test_price_setter_valid(self):
+        """Тест сеттера цены с валидным значением"""
+        product = Product("Телефон", "Смартфон", 50000.0, 10)
+        product.price = 45000.0
+        assert product.price == 45000.0
+
+    def test_price_setter_invalid(self, capsys):
+        """Тест сеттера цены с невалидным значением"""
+        product = Product("Телефон", "Смартфон", 50000.0, 10)
+        product.price = -100
+
+        # Проверяем, что цена не изменилась
+        assert product.price == 50000.0
+
+        # Проверяем вывод сообщения об ошибке
+        captured = capsys.readouterr()
+        assert "Цена не должна быть нулевая или отрицательная" in captured.out
 
 
 class TestCategory:
-    def test_category_initialization(self):
-        """Проверка корректности инициализации объектов класса Category"""
-        category = Category("Смартфоны", "Мобильные устройства", [])
+    def test_category_str_empty(self):
+        """Тест строкового представления пустой категории"""
+        category = Category("Электроника", "Электронные устройства")
+        expected = "Электроника, количество продуктов: 0 шт."
+        assert str(category) == expected
 
-        assert category.name == "Смартфоны"
-        assert category.description == "Мобильные устройства"
-        assert category.products == []
-        assert len(category.products) == 0
+    def test_category_str_with_products(self):
+        """Тест строкового представления категории с товарами"""
+        product1 = Product("Телефон", "Смартфон", 50000.0, 10)
+        product2 = Product("Ноутбук", "Игровой", 100000.0, 2)
 
-    def test_category_with_products(self):
-        """Проверка категории с товарами"""
-        product1 = Product("Телефон1", "Описание1", 10000.0, 5)
-        product2 = Product("Телефон2", "Описание2", 20000.0, 3)
+        category = Category("Электроника", "Электронные устройства", [product1, product2])
+        expected = "Электроника, количество продуктов: 12 шт."
+        assert str(category) == expected
 
-        category = Category("Телефоны", "Мобильные", [product1, product2])
+    def test_products_getter(self):
+        """Тест геттера для списка продуктов"""
+        product1 = Product("Телефон", "Смартфон", 50000.0, 10)
+        product2 = Product("Ноутбук", "Игровой", 100000.0, 2)
 
-        assert category.name == "Телефоны"
-        assert category.description == "Мобильные"
-        assert len(category.products) == 2
-        assert category.products[0].name == "Телефон1"
-        assert category.products[1].name == "Телефон2"
+        category = Category("Электроника", "Электронные устройства", [product1, product2])
 
-    def test_category_count(self):
-        """Подсчет количества категорий"""
-        # Сбрасываем счетчик перед тестом
-        Category.category_count = 0
+        products_str = category.products
+        assert "Телефон, 50000.0 руб. Остаток: 10 шт." in products_str
+        assert "Ноутбук, 100000.0 руб. Остаток: 2 шт." in products_str
 
-        category1 = Category("Категория1", "Описание1", [])
-        assert Category.category_count == 1
+    def test_add_product(self):
+        """Тест добавления товара в категорию"""
+        category = Category("Электроника", "Электронные устройства")
+        product = Product("Телефон", "Смартфон", 50000.0, 10)
 
-        category2 = Category("Категория2", "Описание2", [])
-        assert Category.category_count == 2
+        category.add_product(product)
 
-        category3 = Category("Категория3", "Описание3", [])
-        assert Category.category_count == 3
+        # Проверяем, что продукт добавился
+        assert len(category._Category__products) == 1
+        assert str(product) in category.products
 
-    def test_product_count(self):
-        """Подсчет количества товаров"""
-        # Сбрасываем счетчик перед тестом
-        Category.product_count = 0
-        Category.category_count = 0
 
-        product1 = Product("Товар1", "Описание1", 100.0, 5)
-        product2 = Product("Товар2", "Описание2", 200.0, 3)
-        product3 = Product("Товар3", "Описание3", 300.0, 7)
+class TestNewProduct:
+    def test_new_product_from_dict(self):
+        """Тест создания продукта из словаря"""
+        product_data = {
+            "name": "Телефон",
+            "description": "Смартфон",
+            "price": 50000.0,
+            "quantity": 10
+        }
 
-        # Создаем категории с товарами
-        category1 = Category("Кат1", "Описание", [product1, product2])
-        assert Category.product_count == 2
+        product = Product.new_product(product_data)
 
-        category2 = Category("Кат2", "Описание", [product3])
-        assert Category.product_count == 3
+        assert product.name == "Телефон"
+        assert product.description == "Смартфон"
+        assert product.price == 50000.0
+        assert product.quantity == 10
 
-        # Категория без товаров не должна увеличивать счетчик товаров
-        category3 = Category("Кат3", "Описание", [])
-        assert Category.product_count == 3  # остается 3
 
-        # Категория с существующими товарами (дубликаты считаются отдельно)
-        category4 = Category("Кат4", "Описание", [product1, product2, product3])
-        assert Category.product_count == 6  # 3 + 3 = 6
-
-    def test_multiple_categories_product_count(self):
-        """Тест подсчета товаров при нескольких категориях"""
-        Category.product_count = 0
-        Category.category_count = 0
-
-        # Создаем несколько товаров
-        products = [
-            Product(f"Товар{i}", f"Описание{i}", 100.0 * i, i)
-            for i in range(1, 6)
-        ]
-
-        # Создаем категории с разным количеством товаров
-        category1 = Category("Кат1", "Описание", products[:2])  # 2 товара
-        category2 = Category("Кат2", "Описание", products[2:])  # 3 товара
-
-        assert Category.category_count == 2
-        assert Category.product_count == 5
+if __name__ == "__main__":
+    # Запуск тестов
+    pytest.main([__file__, "-v"])
