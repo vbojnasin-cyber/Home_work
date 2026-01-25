@@ -1,34 +1,16 @@
-from src.product import Product
+from .product import Product
 
 
 class Smartphone(Product):
-    """Класс для смартфонов, наследник Product"""
-
-    def __init__(
-        self, name, description, price, quantity, efficiency, model, memory, color
-    ):
-        """
-        Инициализация смартфона
-
-        Args:
-            name (str): Название
-            description (str): Описание
-            price (float): Цена
-            quantity (int): Количество
-            efficiency (str): Производительность
-            model (str): Модель
-            memory (int): Объем встроенной памяти (в ГБ)
-            color (str): Цвет
-        """
+    def __init__(self, name, description, price, quantity,
+                 efficiency, model, memory, color):
         super().__init__(name, description, price, quantity)
-        self.efficiency = efficiency  # производительность
-        self.model = model  # модель
-        self.memory = memory  # объем встроенной памяти
-        self.color = color  # цвет
+        self.efficiency = efficiency
+        self.model = model
+        self.memory = memory
+        self.color = color
 
     def __str__(self):
-        return (
-            f"{self.name}, {self.price} руб. Остаток: {self.quantity} шт.\n"
-            f"Производительность: {self.efficiency}, Модель: {self.model}, "
-            f"Память: {self.memory} ГБ, Цвет: {self.color}"
-        )
+        return (f"{self.name} ({self.model}), {self.price} руб. "
+                f"Остаток: {self.quantity} шт. "
+                f"Память: {self.memory} ГБ, Цвет: {self.color}")
