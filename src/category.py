@@ -37,9 +37,7 @@ class Category:
 
         # Дополнительная проверка с помощью issubclass()
         if not issubclass(type(product), Product):
-            raise TypeError(
-                "Объект должен быть наследником класса Product"
-            )
+            raise TypeError("Объект должен быть наследником класса Product")
 
         self.__products.append(product)
         Category.product_count += 1

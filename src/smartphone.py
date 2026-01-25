@@ -4,8 +4,9 @@ from src.product import Product
 class Smartphone(Product):
     """Класс для смартфонов, наследник Product"""
 
-    def __init__(self, name, description, price, quantity,
-                 efficiency, model, memory, color):
+    def __init__(
+        self, name, description, price, quantity, efficiency, model, memory, color
+    ):
         """
         Инициализация смартфона
 
@@ -26,6 +27,8 @@ class Smartphone(Product):
         self.color = color  # цвет
 
     def __str__(self):
-        return (f"{self.name}, {self.price} руб. Остаток: {self.quantity} шт.\n"
-                f"Производительность: {self.efficiency}, Модель: {self.model}, "
-                f"Память: {self.memory} ГБ, Цвет: {self.color}")
+        return (
+            f"{self.name}, {self.price} руб. Остаток: {self.quantity} шт.\n"
+            f"Производительность: {self.efficiency}, Модель: {self.model}, "
+            f"Память: {self.memory} ГБ, Цвет: {self.color}"
+        )
