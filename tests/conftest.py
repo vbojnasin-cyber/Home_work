@@ -1,9 +1,9 @@
 import pytest
 
 from src.category import Category
-from src.smartphone import Smartphone
 from src.lawngrass import LawnGrass
 from src.product import Product
+from src.smartphone import Smartphone
 
 
 @pytest.fixture
@@ -16,8 +16,6 @@ def category():
     return Category("Фрукты", "Свежие фрукты")
 
 
-
-
 @pytest.fixture
 def smartphone():
     return Smartphone(
@@ -28,7 +26,7 @@ def smartphone():
         efficiency="A16 Bionic",
         model="15 Pro",
         memory=256,
-        color="Титановый"
+        color="Титановый",
     )
 
 
@@ -42,9 +40,8 @@ def smartphone2():
         efficiency="Snapdragon 8 Gen 2",
         model="S23 Ultra",
         memory=512,
-        color="Черный"
+        color="Черный",
     )
-
 
 
 @pytest.fixture
@@ -53,8 +50,3 @@ def empty_category():
     Category.category_count = 0
     Category.product_count = 0
     return Category("Тестовая категория", "Описание категории")
-
-
-
-
-

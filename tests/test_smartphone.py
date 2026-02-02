@@ -4,8 +4,6 @@ from src.product import Product
 from src.smartphone import Smartphone
 
 
-
-
 class TestSmartphone:
     """Тесты для класса Smartphone"""
 
@@ -43,6 +41,7 @@ class TestSmartphone:
     def test_smartphone_addition_different_type(self, smartphone):
         """Тест: нельзя сложить смартфон с другим типом продукта"""
         from src.lawngrass import LawnGrass
+
         grass = LawnGrass("Трава", "Описание", 100, 10, "RU", 14, "Зеленый")
 
         with pytest.raises(TypeError) as exc_info:
@@ -80,7 +79,7 @@ def test_smartphone_new_product_method():
         "efficiency": "Snapdragon 888",
         "model": "13 Pro",
         "memory": 128,
-        "color": "Синий"
+        "color": "Синий",
     }
 
     smartphone = Smartphone(**product_data)

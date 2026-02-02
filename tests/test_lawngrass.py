@@ -13,7 +13,7 @@ def lawngrass():
         quantity=150,
         country="Германия",
         germination_period=10,
-        color="Изумрудный"
+        color="Изумрудный",
     )
 
 
@@ -26,7 +26,7 @@ def lawngrass2():
         quantity=300,
         country="Россия",
         germination_period=14,
-        color="Зеленый"
+        color="Зеленый",
     )
 
 
@@ -66,8 +66,8 @@ class TestLawnGrass:
     def test_lawngrass_addition_different_type(self, lawngrass):
         """Тест: нельзя сложить траву с другим типом продукта"""
         from src.smartphone import Smartphone
-        phone = Smartphone("Телефон", "Описание", 100, 5,
-                           "a", "m", 64, "black")
+
+        phone = Smartphone("Телефон", "Описание", 100, 5, "a", "m", 64, "black")
 
         with pytest.raises(TypeError) as exc_info:
             lawngrass + phone
@@ -77,6 +77,5 @@ class TestLawnGrass:
     def test_lawngrass_negative_germination_period(self):
         """Тест: отрицательный срок прорастания (если нужно валидировать)"""
         # Сейчас можно создать с отрицательным сроком, но можно добавить проверку
-        grass = LawnGrass("Трава", "Описание", 100, 10,
-                          "RU", -5, "Зеленый")
+        grass = LawnGrass("Трава", "Описание", 100, 10, "RU", -5, "Зеленый")
         assert grass.germination_period == -5  # Пока что допустимо

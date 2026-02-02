@@ -19,7 +19,7 @@ class TestIntegration:
             efficiency="Tensor G3",
             model="8 Pro",
             memory=256,
-            color="Серый"
+            color="Серый",
         )
 
         grass = LawnGrass(
@@ -29,7 +29,7 @@ class TestIntegration:
             quantity=120,
             country="Нидерланды",
             germination_period=12,
-            color="Темно-зеленый"
+            color="Темно-зеленый",
         )
 
         # Создаем категории

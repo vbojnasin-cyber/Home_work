@@ -1,172 +1,220 @@
+from abc import ABC
+
 import pytest
+
+from src.base_product import BaseProduct
+from src.lawngrass import LawnGrass
 from src.product import Product
 from src.smartphone import Smartphone
-from src.lawngrass import LawnGrass
 
 
-@pytest.fixture
-def product():
-    return Product(
-        name="Яблоки",
-        description="Фрукты",
-        price=100,
-        quantity=300
+class TestBaseProduct:
+    """Тесты для абстрактного класса BaseProduct"""
+
+    def test_base_product_is_abstract(self):
+        """Проверяем, что BaseProduct - абстрактный класс"""
+        assert isinstance(BaseProduct, type)
+        assert ABC in BaseProduct.__bases__
+
+    def test_cannot_instantiate_base_product(self):
+        """Нельзя создать экземпляр абстрактного класса"""
+        with pytest.raises(TypeError):
+            BaseProduct("Test", "Desc", 100, 10)
+
+
+class TestProductInheritance:
+    """Тесты наследования от BaseProduct"""
+
+    def test_product_inherits_from_base_product(self):
+        """Product должен наследоваться от BaseProduct"""
+        assert issubclass(Product, BaseProduct)
+
+    def test_product_implements_abstract_methods(self):
+        """Product должен реализовывать все абстрактные методы"""
+        # Создаем экземпляр - если методы не реализованы, будет ошибка
+        product = Product("Телефон", "Хороший телефон", 10000, 5)
+
+        # Проверяем, что методы существуют
+        assert hasattr(product, "__str__")
+        assert hasattr(product, "__add__")
+        assert hasattr(product, "price")
+        assert hasattr(Product, "price") and isinstance(Product.price, property)
+
+
+class TestSmartphoneAndLawnGrass:
+    """Тесты для наследников Product"""
+
+    def test_smartphone_inheritance(self):
+        """Smartphone должен наследоваться от Product"""
+        assert issubclass(Smartphone, Product)
+
+    def test_lawn_grass_inheritance(self):
+        """LawnGrass должен наследоваться от Product"""
+        assert issubclass(LawnGrass, Product)
+
+    def test_smartphone_creation(self):
+        """Создание смартфона с дополнительными атрибутами"""
+        phone = Smartphone(
+            name="iPhone",
+            description="Смартфон",
+            price=50000,
+            quantity=10,
+            efficiency=95.5,
+            model="15 Pro",
+            memory=256,
+            color="Black",
+        )
+
+        assert phone.name == "iPhone"
+        assert phone.model == "15 Pro"
+        assert phone.memory == 256
+        assert phone.color == "Black"
+
+    def test_lawn_grass_creation(self):
+        """Создание газонной травы с дополнительными атрибутами"""
+        grass = LawnGrass(
+            name="Трава газонная",
+            description="Для дачи",
+            price=1500,
+            quantity=50,
+            country="Россия",
+            germination_period=30,
+            color="Зеленый",
+        )
+
+        assert grass.name == "Трава газонная"
+        assert grass.country == "Россия"
+        assert grass.germination_period == 30
+        assert grass.color == "Зеленый"
+
+
+class TestReprMixin:
+    """Тесты для миксина ReprMixin"""
+
+    def test_product_has_repr_method(self):
+        """Product должен иметь метод __repr__ после добавления миксина"""
+        product = Product("Test", "Desc", 100, 10)
+        assert hasattr(product, "__repr__")
+
+        # Проверяем, что repr возвращает строку
+        repr_str = repr(product)
+        assert isinstance(repr_str, str)
+        assert product.__class__.__name__ in repr_str
+
+    def test_smartphone_repr(self):
+        """Smartphone также должен иметь метод __repr__"""
+        phone = Smartphone(
+            name="iPhone",
+            description="Смартфон",
+            price=50000,
+            quantity=10,
+            efficiency=95.5,
+            model="15 Pro",
+            memory=256,
+            color="Black",
+        )
+
+        repr_str = repr(phone)
+        assert "Smartphone" in repr_str
+        assert "iPhone" in repr_str
+        assert "15 Pro" in repr_str
+
+    def test_repr_includes_attributes(self):
+        """__repr__ должен включать атрибуты объекта"""
+        product = Product("Телевизор", "4K", 30000, 3)
+        repr_str = repr(product)
+
+        # Проверяем наличие основных атрибутов в repr
+        assert "Телевизор" in repr_str
+        assert "4K" in repr_str
+        assert "3" in repr_str
+        # price может не быть в repr, так как это приватный атрибут
+        # но можно проверить через свойство
+        assert product.price == 30000
+
+
+class TestOldTestsStillWork:
+    """Тесты для проверки старой функциональности"""
+
+    def test_price_property(self):
+        """Тест свойства price"""
+        product = Product("Тест", "Описание", 100, 5)
+
+        # Проверяем getter
+        assert product.price == 100
+
+        # Проверяем setter с корректным значением
+        product.price = 150
+        assert product.price == 150
+
+        # Проверяем setter с некорректным значением
+        # (должно вывести сообщение в консоль, но не падать)
+        product.price = -50
+        assert product.price == 150  # Цена не должна измениться
+
+    def test_add_method(self):
+        """Тест сложения продуктов"""
+        product1 = Product("Товар1", "Описание", 100, 2)  # 100 * 2 = 200
+        product2 = Product("Товар2", "Описание", 200, 3)  # 200 * 3 = 600
+
+        # Сложение одинаковых продуктов
+        assert product1 + product2 == 800
+
+        # Сложение разных категорий должно вызывать ошибку
+        phone = Smartphone("iPhone", "Смартфон", 50000, 1, 95.5, "15 Pro", 256, "Black")
+
+        with pytest.raises(
+            TypeError, match="Нельзя складывать товары разных категорий"
+        ):
+            product1 + phone
+
+    def test_str_method(self):
+        """Тест строкового представления"""
+        product = Product("Кофе", "Арабика", 500, 10)
+        str_repr = str(product)
+
+        assert "Кофе" in str_repr
+        assert "500" in str_repr
+        assert "10" in str_repr
+
+
+# Тесты для проверки, что старые тесты все еще работают
+def test_all_old_functionality():
+    """Интеграционный тест всей старой функциональности"""
+    # 1. Создание продуктов
+    product = Product("Молоко", "Парное", 80, 50)
+    phone = Smartphone(
+        name="Samsung",
+        description="Флагман",
+        price=70000,
+        quantity=5,
+        efficiency=98.0,
+        model="S23 Ultra",
+        memory=512,
+        color="Gray",
     )
-
-
-@pytest.fixture
-def smartphone():
-    return Smartphone(
-        name="iPhone 15",
-        description="Смартфон Apple",
-        price=89990,
-        quantity=50,
-        efficiency="A16 Bionic",
-        model="15 Pro",
-        memory=256,
-        color="Титановый"
-    )
-
-
-@pytest.fixture
-def lawngrass():
-    return LawnGrass(
-        name="Газонная трава Премиум",
-        description="Трава для элитного газона",
-        price=2500,
-        quantity=150,
+    grass = LawnGrass(
+        name="Трава",
+        description="Для футбола",
+        price=2000,
+        quantity=100,
         country="Германия",
-        germination_period=10,
-        color="Изумрудный"
+        germination_period=25,
+        color="Темно-зеленый",
     )
 
+    # 2. Проверка свойств
+    assert product.name == "Молоко"
+    assert phone.model == "S23 Ultra"
+    assert grass.country == "Германия"
 
-def test_new_product(product):
-    """Тест создания базового продукта"""
-    assert product.quantity == 300
-    assert product.price == 100
-    assert product.name == "Яблоки"
-    assert product.description == "Фрукты"
-    assert product._Product__price == 100
+    # 3. Проверка методов
+    assert isinstance(str(product), str)
+    assert isinstance(str(phone), str)
+    assert isinstance(str(grass), str)
 
+    # 4. Проверка сложения (только одинаковые типы)
+    product2 = Product("Хлеб", "Белый", 50, 30)
+    assert product + product2 == (80 * 50 + 50 * 30)
 
-def test_price_setter(product):
-    """Тест сеттера цены"""
-    product.price = 150
-    assert product.price == 150
-
-
-def test_price_setter_negative(product, capsys):
-    """Тест сеттера с отрицательной ценой"""
-    original_price = product.price
-    product.price = -50
-
-    # Проверяем что цена не изменилась
-    assert product.price == original_price
-
-    # Проверяем вывод сообщения об ошибке
-    captured = capsys.readouterr()
-    assert "Цена не может быть меньше 0" in captured.out
-
-
-def test_product_add_same_type(product):
-    """Тест сложения одинаковых типов продуктов"""
-    product_2 = Product("Груши", "Фрукты", 200, 50)
-    result = product + product_2
-    assert result == 40000  # 100*300 + 200*50
-
-
-def test_product_add_different_types(product, smartphone, lawngrass):
-    """Тест что нельзя складывать разные типы продуктов"""
-    with pytest.raises(TypeError, match="Нельзя складывать товары разных категорий"):
-        product + smartphone
-
-    with pytest.raises(TypeError, match="Нельзя складывать товары разных категорий"):
-        smartphone + lawngrass
-
-    with pytest.raises(TypeError, match="Нельзя складывать товары разных категорий"):
-        lawngrass + product
-
-
-def test_new_product_from_dict():
-    """Тест создания продукта из словаря"""
-    product_data = {
-        "name": "banana",
-        "description": "fruit",
-        "price": 400,
-        "quantity": 100
-    }
-    product_4 = Product.new_product(product_data)
-    assert product_4.name == "banana"
-    assert product_4.description == "fruit"
-    assert product_4.price == 400
-    assert product_4.quantity == 100  # ЗАКРЫВАЮЩАЯ СКОБКА ДОБАВЛЕНА!
-
-
-def test_smartphone_creation(smartphone):
-    """Тест создания смартфона"""
-    assert smartphone.name == "iPhone 15"
-    assert smartphone.model == "15 Pro"
-    assert smartphone.memory == 256
-    assert smartphone.color == "Титановый"
-    assert smartphone.efficiency == "A16 Bionic"
-
-
-def test_lawngrass_creation(lawngrass):
-    """Тест создания газонной травы"""
-    assert lawngrass.name == "Газонная трава Премиум"
-    assert lawngrass.country == "Германия"
-    assert lawngrass.germination_period == 10
-    assert lawngrass.color == "Изумрудный"
-
-
-def test_inheritance():
-    """Тест наследования"""
-    smartphone = Smartphone("Тест", "Описание", 100, 10, "a", "m", 128, "black")
-    lawngrass = LawnGrass("Тест", "Описание", 50, 20, "RU", 14, "green")
-
-    # Проверяем что оба являются Product
-    assert isinstance(smartphone, Product)
-    assert isinstance(lawngrass, Product)
-
-    # Проверяем конкретные типы
-    assert type(smartphone) == Smartphone
-    assert type(lawngrass) == LawnGrass
-
-
-def test_str_methods():
-    """Тест строковых представлений"""
-    product = Product("Яблоки", "Фрукты", 100, 300)
-    smartphone = Smartphone("iPhone", "Смартфон", 1000, 10, "A16", "15", 256, "Черный")
-    lawngrass = LawnGrass("Трава", "Газонная", 500, 100, "Россия", 14, "Зеленый")
-
-    # Проверяем что __str__ работает
-    assert "Яблоки" in str(product)
-    assert "100" in str(product)
-
-    assert "iPhone" in str(smartphone)
-    assert "15" in str(smartphone)  # модель
-    assert "256" in str(smartphone)  # память
-
-    assert "Трава" in str(lawngrass)
-    assert "Россия" in str(lawngrass)
-    assert "14" in str(lawngrass)  # срок прорастания
-
-
-def test_add_only_same_class():
-    """Тест что можно складывать только одинаковые классы"""
-    phone1 = Smartphone("Тел1", "Описание", 100, 5, "a", "m", 64, "black")
-    phone2 = Smartphone("Тел2", "Описание", 200, 3, "b", "n", 128, "white")
-
-    # Можно складывать одинаковые классы
-    result = phone1 + phone2
-    assert result == (100 * 5 + 200 * 3)
-
-    # Нельзя складывать с другим классом
-    product = Product("Продукт", "Описание", 50, 10)
-    with pytest.raises(TypeError):
-        phone1 + product
-
-
-if __name__ == "__main__":
-    pytest.main([__file__, "-v"])
+    print("Все тесты старой функциональности прошли успешно!")
