@@ -35,3 +35,13 @@ class Category:
         for product in self.__products:
             result += str(product) + "\n"
         return result
+
+    def average_price(self):
+        """Метод для расчета средней цены товаров в категории"""
+        try:
+            total_price = sum(product.price for product in self.__products)
+            average = total_price / len(self.__products)
+            return average
+        except ZeroDivisionError:
+            # Обработка случая, когда в категории нет товаров
+            return 0

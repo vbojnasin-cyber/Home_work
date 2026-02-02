@@ -4,12 +4,14 @@ from .repr_mixin import ReprMixin
 
 class Product(BaseProduct, ReprMixin):  # Миксин идет ПЕРВЫМ!
     def __init__(self, name, description, price, quantity):
+        # Проверка на нулевое количество
+        if quantity == 0:
+            raise ValueError("Товар с нулевым количеством не может быть добавлен")
+
         # Вызываем конструктор всех родителей
         super().__init__(
             name=name, description=description, price=price, quantity=quantity
         )
-
-    # Остальные методы остаются без изменений...
 
     def __str__(self):
         return f"{self.name}, {self.price} руб. Остаток: {self.quantity} шт."
