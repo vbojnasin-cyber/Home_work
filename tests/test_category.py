@@ -24,7 +24,7 @@ def smartphone():
         efficiency="Быстрый",
         model="Модель X",
         memory=128,
-        color="Черный"
+        color="Черный",
     )
 
 
@@ -37,7 +37,7 @@ def lawngrass():
         quantity=20,
         country="Россия",
         germination_period=14,
-        color="Зеленый"
+        color="Зеленый",
     )
 
 
@@ -56,7 +56,9 @@ class TestCategoryUpdated:
         assert len(empty_category._Category__products) == 1
         assert empty_category._Category__products[0] == lawngrass
 
-    def test_add_mixed_products_to_category(self, empty_category, smartphone, lawngrass):
+    def test_add_mixed_products_to_category(
+        self, empty_category, smartphone, lawngrass
+    ):
         """Тест: добавление разных типов продуктов в одну категорию"""
         empty_category.add_product(smartphone)
         empty_category.add_product(lawngrass)
@@ -78,7 +80,9 @@ class TestCategoryUpdated:
         with pytest.raises(TypeError):
             empty_category.add_product(None)
 
-    def test_category_str_with_mixed_products(self, empty_category, smartphone, lawngrass):
+    def test_category_str_with_mixed_products(
+        self, empty_category, smartphone, lawngrass
+    ):
         """Тест: строковое представление с разными продуктами"""
         empty_category.add_product(smartphone)  # quantity=10
         empty_category.add_product(lawngrass)  # quantity=20
@@ -86,7 +90,9 @@ class TestCategoryUpdated:
         result = str(empty_category)
         assert "количество продуктов: 30" in result  # 10 + 20
 
-    def test_products_property_with_inherited_classes(self, empty_category, smartphone, lawngrass):
+    def test_products_property_with_inherited_classes(
+        self, empty_category, smartphone, lawngrass
+    ):
         """Тест: property products с наследованными классами"""
         empty_category.add_product(smartphone)
         empty_category.add_product(lawngrass)

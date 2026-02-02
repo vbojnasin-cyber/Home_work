@@ -5,7 +5,9 @@ from .repr_mixin import ReprMixin
 class Product(BaseProduct, ReprMixin):  # Миксин идет ПЕРВЫМ!
     def __init__(self, name, description, price, quantity):
         # Вызываем конструктор всех родителей
-        super().__init__(name=name, description=description, price=price, quantity=quantity)
+        super().__init__(
+            name=name, description=description, price=price, quantity=quantity
+        )
 
     # Остальные методы остаются без изменений...
 

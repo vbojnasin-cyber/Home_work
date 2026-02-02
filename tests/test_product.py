@@ -1,9 +1,11 @@
+from abc import ABC
+
 import pytest
+
+from src.base_product import BaseProduct
+from src.lawngrass import LawnGrass
 from src.product import Product
 from src.smartphone import Smartphone
-from src.lawngrass import LawnGrass
-from src.base_product import BaseProduct
-from abc import ABC
 
 
 class TestBaseProduct:
@@ -33,10 +35,10 @@ class TestProductInheritance:
         product = Product("Телефон", "Хороший телефон", 10000, 5)
 
         # Проверяем, что методы существуют
-        assert hasattr(product, '__str__')
-        assert hasattr(product, '__add__')
-        assert hasattr(product, 'price')
-        assert hasattr(Product, 'price') and isinstance(Product.price, property)
+        assert hasattr(product, "__str__")
+        assert hasattr(product, "__add__")
+        assert hasattr(product, "price")
+        assert hasattr(Product, "price") and isinstance(Product.price, property)
 
 
 class TestSmartphoneAndLawnGrass:
@@ -60,7 +62,7 @@ class TestSmartphoneAndLawnGrass:
             efficiency=95.5,
             model="15 Pro",
             memory=256,
-            color="Black"
+            color="Black",
         )
 
         assert phone.name == "iPhone"
@@ -77,7 +79,7 @@ class TestSmartphoneAndLawnGrass:
             quantity=50,
             country="Россия",
             germination_period=30,
-            color="Зеленый"
+            color="Зеленый",
         )
 
         assert grass.name == "Трава газонная"
@@ -92,7 +94,7 @@ class TestReprMixin:
     def test_product_has_repr_method(self):
         """Product должен иметь метод __repr__ после добавления миксина"""
         product = Product("Test", "Desc", 100, 10)
-        assert hasattr(product, '__repr__')
+        assert hasattr(product, "__repr__")
 
         # Проверяем, что repr возвращает строку
         repr_str = repr(product)
@@ -109,7 +111,7 @@ class TestReprMixin:
             efficiency=95.5,
             model="15 Pro",
             memory=256,
-            color="Black"
+            color="Black",
         )
 
         repr_str = repr(phone)
@@ -129,6 +131,7 @@ class TestReprMixin:
         # price может не быть в repr, так как это приватный атрибут
         # но можно проверить через свойство
         assert product.price == 30000
+
 
 class TestOldTestsStillWork:
     """Тесты для проверки старой функциональности"""
@@ -160,7 +163,9 @@ class TestOldTestsStillWork:
         # Сложение разных категорий должно вызывать ошибку
         phone = Smartphone("iPhone", "Смартфон", 50000, 1, 95.5, "15 Pro", 256, "Black")
 
-        with pytest.raises(TypeError, match="Нельзя складывать товары разных категорий"):
+        with pytest.raises(
+            TypeError, match="Нельзя складывать товары разных категорий"
+        ):
             product1 + phone
 
     def test_str_method(self):
@@ -186,7 +191,7 @@ def test_all_old_functionality():
         efficiency=98.0,
         model="S23 Ultra",
         memory=512,
-        color="Gray"
+        color="Gray",
     )
     grass = LawnGrass(
         name="Трава",
@@ -195,7 +200,7 @@ def test_all_old_functionality():
         quantity=100,
         country="Германия",
         germination_period=25,
-        color="Темно-зеленый"
+        color="Темно-зеленый",
     )
 
     # 2. Проверка свойств
