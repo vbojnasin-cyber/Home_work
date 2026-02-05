@@ -5,6 +5,7 @@ class Smartphone(Product):
     def __init__(
         self, name, description, price, quantity, efficiency, model, memory, color
     ):
+        # Вызов родительского конструктора с проверкой quantity
         super().__init__(name, description, price, quantity)
         self.efficiency = efficiency
         self.model = model
@@ -15,5 +16,6 @@ class Smartphone(Product):
         return (
             f"{self.name} ({self.model}), {self.price} руб. "
             f"Остаток: {self.quantity} шт. "
-            f"Память: {self.memory} ГБ, Цвет: {self.color}"
+            f"Память: {self.memory} ГБ, Цвет: {self.color}, "
+            f"Производительность: {self.efficiency}"
         )
